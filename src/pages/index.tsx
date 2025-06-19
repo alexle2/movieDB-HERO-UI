@@ -12,18 +12,19 @@ import { IMAGE_BASE_URL, POSTER_SIZE } from "@/config";
 import { useIndexFetch } from "@/hooks/useIndexFetch";
 import { Movie } from "@/API";
 import Hero from "@/components/hero";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function IndexPage() {
   const { error, loading, state, setSearchTerm } = useIndexFetch();
+  const [search, setSearch] = useState("");
   const movies = state.results;
   const hero = state.results[0];
 
-  // useEffect(() => {
-  //   const timerId = setTimeout(
-  //     () => setSearchTerm(searchTerm), 1500);
-  //   return clearTimeout(timerId);
-  // }, [searchTerm]);
+
+  useEffect(() => {
+    const timerId = setTimeout(() => setSearchTerm(search), 1500);
+    return () => clearTimeout(timerId);
+  }, [search, setSearchTerm]);
 
   return (
     <DefaultLayout>
@@ -40,7 +41,8 @@ export default function IndexPage() {
             label="Search movies"
             size="sm"
             type="text"
-            onChange={(e) => setSearchTerm(e.currentTarget.value)}
+            onChange={(e) => setSearch(e.currentTarget.value)}
+            value={search}
           />
           <h2 className="text-left text-3xl font-semibold">Popular movies</h2>
           {!loading && error && <Alert color="danger" title="Error loaded" />}
@@ -64,7 +66,6 @@ export default function IndexPage() {
                       value={Math.round(movie.vote_average * 10)}
                     />
                     <Image
-                      
                       alt="Card background"
                       className="object-cover rounded-none"
                       src={`${IMAGE_BASE_URL}${POSTER_SIZE}${movie.poster_path}`}

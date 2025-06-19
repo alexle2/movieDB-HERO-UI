@@ -12,7 +12,7 @@ export const useIndexFetch = () => {
   const [state, setState] = useState<Movies>(initState);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('')
+  const [searchTerm, setSearchTerm] = useState('');
 
   const fetchMovies = async (page: number = 1, searchTerm = "") => {
     try {
