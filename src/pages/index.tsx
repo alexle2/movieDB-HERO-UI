@@ -12,24 +12,55 @@ import { IMAGE_BASE_URL, POSTER_SIZE } from "@/config";
 import { useIndexFetch } from "@/hooks/useIndexFetch";
 import { Movie } from "@/API";
 import Hero from "@/components/hero";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export default function IndexPage() {
-  const { error, loading, state, setSearchTerm } = useIndexFetch();
+  const {
+    error,
+    loading,
+    state,
+    searchTerm,
+    setSearchTerm,
+    setIsLoadingMore,
+    isLoadingMore,
+  } = useIndexFetch();
   const [search, setSearch] = useState("");
   const movies = state.results;
   const hero = state.results[0];
+  const inital = useRef(true);
 
+  const scrollHandler = useCallback(() => {
+    if (
+      window.scrollY + 1 >=
+      document.documentElement.scrollHeight -
+        document.documentElement.clientHeight
+    ) {
+      console.log("end", state.page, state.total_pages, !loading);
+      if (state.page < state.total_pages && !loading) {
+        console.log("loadmore");
+        setIsLoadingMore(true);
+      }
+    }
+  }, [state, loading]);
 
   useEffect(() => {
-    const timerId = setTimeout(() => setSearchTerm(search), 1500);
+    if (inital.current) {
+      inital.current = false;
+      return;
+    }
+    const timerId = setTimeout(() => setSearchTerm(search), 500);
     return () => clearTimeout(timerId);
-  }, [search, setSearchTerm]);
+  }, [search]);
+
+  useEffect(() => {
+    document.addEventListener("scroll", scrollHandler);
+    return () => document.removeEventListener("scroll", scrollHandler);
+  }, []);
 
   return (
     <DefaultLayout>
       <div className="flex flex-col gap-4">
-        {hero && (
+        {!searchTerm && hero && (
           <Hero
             imageUrl={`${IMAGE_BASE_URL}${POSTER_SIZE}${hero.backdrop_path}`}
             title={hero.title}
@@ -42,9 +73,10 @@ export default function IndexPage() {
             size="sm"
             type="text"
             onChange={(e) => setSearch(e.currentTarget.value)}
-            value={search}
           />
-          <h2 className="text-left text-3xl font-semibold">Popular movies</h2>
+          <h2 className="text-left text-3xl font-semibold">
+            {searchTerm ? "Search Result" : "Popular movies"}
+          </h2>
           {!loading && error && <Alert color="danger" title="Error loaded" />}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {movies.map((movie: Movie) => {
@@ -56,7 +88,7 @@ export default function IndexPage() {
                       color={
                         movie.vote_average > 7
                           ? "success"
-                          : movie.vote_average < 3
+                          : movie.vote_average < 4
                             ? "danger"
                             : "warning"
                       }

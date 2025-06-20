@@ -13,27 +13,36 @@ export const useIndexFetch = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   const fetchMovies = async (page: number = 1, searchTerm = "") => {
+    setLoading(true);
     try {
       const data = (await API.fetchMovies(searchTerm, page));
       setError(false);
       setLoading(false);
+      setIsLoadingMore(false);
       setState((prev) => ({
-        page: prev.page,
-        results: (page > 1) ? [...prev.results, ...prev.results] : data.results,
-        total_pages: prev.total_pages,
-        total_results: prev.total_results
+        ...data,
+        results: (page > 1) ? [...prev.results, ...data.results] : [...data.results],
       }));
+      console.log(state)
     } catch (error) {
       setError(true);
       setLoading(false);
+      setIsLoadingMore(false);
     }
   };
 
   useEffect(() => {
+    setState(initState);
     fetchMovies(1, searchTerm);
   }, [searchTerm]);
 
-  return { error, loading, state, searchTerm, setSearchTerm }
+  useEffect(() => {
+    if (!isLoadingMore) return;
+    fetchMovies(state.page + 1, searchTerm);
+  }, [isLoadingMore])
+
+  return { error, loading, state, searchTerm, setSearchTerm, setIsLoadingMore, isLoadingMore }
 }
