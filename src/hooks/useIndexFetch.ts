@@ -26,14 +26,13 @@ export const useIndexFetch = () => {
         ...data,
         results: (page > 1) ? [...prev.results, ...data.results] : [...data.results],
       }));
-      console.log(state)
     } catch (error) {
       setError(true);
       setLoading(false);
       setIsLoadingMore(false);
     }
   };
-
+  console.log(state)
   useEffect(() => {
     setState(initState);
     fetchMovies(1, searchTerm);
