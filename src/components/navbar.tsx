@@ -15,11 +15,13 @@ import clsx from "clsx";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import {
-  GithubIcon,
-  SearchIcon,
-} from "@/components/icons";
+import { GithubIcon, SearchIcon } from "@/components/icons";
 import { Logo } from "@/components/icons";
+import { Button } from "@heroui/button";
+import { Autocomplete, AutocompleteItem, Avatar } from "@heroui/react";
+import { useIndexFetch } from "@/hooks/useIndexFetch";
+import { useEffect, useRef, useState } from "react";
+import Search from "./search";
 
 export const Navbar = () => {
   const searchInput = (
@@ -53,9 +55,7 @@ export const Navbar = () => {
             href="/"
           >
             <Logo />
-            <p className="font-bold text-inherit text-cyan-500">
-              TMDB
-            </p>
+            <p className="font-bold text-inherit text-cyan-500">TMDB</p>
           </Link>
         </NavbarBrand>
         <div className="hidden lg:flex gap-4 justify-start ml-2">
@@ -80,9 +80,11 @@ export const Navbar = () => {
         className="hidden md:flex basis-1/5 sm:basis-full"
         justify="end"
       >
-        <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
+        <NavbarItem className="hidden lg:flex">
+          <Search />
+        </NavbarItem>
         <NavbarItem className="hidden md:flex">
-          <Link
+          {/* <Link
             className={clsx(
               linkStyles({ color: "foreground" }),
               "data-[active=true]:text-primary data-[active=true]:font-medium"
@@ -91,7 +93,10 @@ export const Navbar = () => {
             href="/login"
           >
             Login
-          </Link>
+          </Link> */}
+          <Button as={Link} color="primary" href="/login" variant="flat">
+            Login
+          </Button>
         </NavbarItem>
       </NavbarContent>
 

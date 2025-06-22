@@ -32,7 +32,6 @@ export const useIndexFetch = () => {
       setIsLoadingMore(false);
     }
   };
-  console.log(state)
   useEffect(() => {
     setState(initState);
     fetchMovies(1, searchTerm);
@@ -43,5 +42,5 @@ export const useIndexFetch = () => {
     fetchMovies(state.page + 1, searchTerm);
   }, [isLoadingMore])
 
-  return { error, loading, state, searchTerm, setSearchTerm, setIsLoadingMore, isLoadingMore }
+  return { error, loading, state, searchTerm, setSearchTerm, setIsLoadingMore, isLoadingMore };
 }
