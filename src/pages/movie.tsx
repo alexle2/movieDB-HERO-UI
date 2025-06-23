@@ -31,25 +31,24 @@ export default function Movie() {
             className="border-none bg-background/60 dark:bg-default-100/50 w-full"
             shadow="sm"
           >
-            <CardBody>
-              <div className="grid grid-cols-6 md:grid-cols-12 gap-6 md:gap-4">
+            <CardBody className="p-0">
+              <div className="grid grid-cols-6 md:grid-cols-12 gap-6 md:gap-8">
                 <div className="relative col-span-6 md:col-span-4">
                   <Image
                     alt="Album cover"
                     className="object-cover"
-                    width={400}
+                    width="100%"
                     shadow="md"
                     src={`${IMAGE_BASE_URL}${POSTER_SIZE}${movie.poster_path}`}
-                    height="100%"
                   />
                 </div>
-                <div className="flex flex-col col-span-6 md:col-span-8">
+                <div className="flex flex-col col-span-6 md:col-span-8 p-4">
                   <div className="flex justify-between items-start">
                     <div className="flex flex-col gap-4">
                       <h1 className="font-semibold text-foreground/90 text-4xl">
                         {movie.title}
                       </h1>
-                      <p className="text-small text-foreground/80">
+                      <p className="text-md text-foreground/80">
                         {movie.overview}
                       </p>
                       <CircularProgress
@@ -65,17 +64,24 @@ export default function Movie() {
                         size="lg"
                         value={Math.round(movie.vote_average * 10)}
                       />
-                      {movie.budget > 0 && <div className="flex items-center justify-between">
-                        <b>Budget</b>
-                        <p className="text-default-500">{movie.budget}$</p>
-                      </div>}
+                      {movie.budget > 0 && (
+                        <div className="flex items-center justify-between">
+                          <b>Budget</b>
+                          <p className="text-default-500">{movie.budget}$</p>
+                        </div>
+                      )}
+                      <div className="flex items-center justify-between">
+                        <b>Status</b>
+                        <p className="text-default-500">{movie.status}</p>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </CardBody>
           </Card>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <h2 className="text-4xl font-semibold">Actors</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {movie.actors.map((actor) => {
               return (
                 <Card key={actor.id}>

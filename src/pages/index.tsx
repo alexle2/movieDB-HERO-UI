@@ -75,7 +75,7 @@ export default function IndexPage() {
             {movies.map((movie: Movie) => {
               return (
                 <Link href={`/movies/movie/${movie.id}`}>
-                  <Card key={movie.id}>
+                  <Card key={movie.id} className="w-full h-full">
                     <CardBody className="overflow-hidden py-0 px-0 relative min-h-48">
                       <CircularProgress
                         className="absolute top-2 left-2 z-20 bg-slate-100 rounded-full dark:bg-slate-700"
