@@ -181,6 +181,25 @@ export default {
     ).json()
     return data
   },
+  watchlist: async (
+    sessionId: number,
+    movieId: number,
+    accountId: number,
+    watchlist: boolean
+  ) => {
+    const endpoint = `${API_URL}account/${accountId}/watchlist?api_key=${API_KEY}&session_id=${sessionId}`
+    const data = await (
+      await fetch(endpoint, {
+        ...defaultConfig,
+        body: JSON.stringify({
+          media_type: 'movie',
+          media_id: movieId,
+          watchlist: !watchlist,
+        }),
+      })
+    ).json()
+    return data
+  },
   fetchFavoritehMovies: async (
     sessionId: number,
     accountId: number
