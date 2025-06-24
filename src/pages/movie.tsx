@@ -4,17 +4,77 @@ import { useParams } from "react-router-dom";
 import { IMAGE_BASE_URL, POSTER_SIZE } from "@/config";
 import {
   Alert,
+  Button,
   Card,
   CardBody,
   CardHeader,
   CircularProgress,
   Image,
+  Slider,
 } from "@heroui/react";
+import { useContext } from "react";
+import { UserContext } from "@/context";
+
+const HeartIcon = ({
+  fill = "currentColor",
+  filled = "none",
+  size = 24,
+  height = 24,
+  width = 24,
+  ...props
+}) => {
+  return (
+    <svg
+      fill={filled ? "fill" : "none"}
+      height={size || height || 24}
+      viewBox="0 0 24 24"
+      width={size || width || 24}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M12.62 20.81c-.34.12-.9.12-1.24 0C8.48 19.82 2 15.69 2 8.69 2 5.6 4.49 3.1 7.56 3.1c1.82 0 3.43.88 4.44 2.24a5.53 5.53 0 0 1 4.44-2.24C19.51 3.1 22 5.6 22 8.69c0 7-6.48 11.13-9.38 12.12Z"
+        stroke={fill}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+      />
+    </svg>
+  );
+};
+
+const BookmarkIcon = ({
+  fill = "currentColor",
+  filled = "none",
+  size = 24,
+  height = 24,
+  width = 24,
+  ...props
+}) => {
+  return (
+    <svg
+      fill={filled ? "fill" : "none"}
+      height={size || height || 24}
+      viewBox="0 0 24 24"
+      width={size || width || 24}
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
+      <path
+        d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"
+        stroke={fill}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth={1.5}
+      />
+    </svg>
+  );
+};
 
 export default function Movie() {
   const { id } = useParams();
   const { error, loading, movie } = useMovieFetch(id);
-  console.log(error, loading, movie);
+  const { isAuth }: any = useContext(UserContext);
 
   return (
     <DefaultLayout>
@@ -74,6 +134,50 @@ export default function Movie() {
                         <b>Status</b>
                         <p className="text-default-500">{movie.status}</p>
                       </div>
+                      {isAuth && (
+                        <div className="flex gap-4 items-center">
+                          <Button
+                            isIconOnly
+                            aria-label="Like"
+                            color="primary"
+                            variant="light"
+                          >
+                            <HeartIcon />
+                          </Button>
+                          <Button
+                            isIconOnly
+                            aria-label="Like"
+                            color="primary"
+                            variant="light"
+                          >
+                            <BookmarkIcon />
+                          </Button>
+                          <Slider
+                            className="max-w-sm"
+                            defaultValue={20}
+                            formatOptions={{ style: "decimal" }}
+                            label="Select a rating"
+                            marks={[
+                              {
+                                value: 20,
+                                label: "20%",
+                              },
+                              {
+                                value: 50,
+                                label: "50%",
+                              },
+                              {
+                                value: 80,
+                                label: "80%",
+                              },
+                            ]}
+                            maxValue={100}
+                            minValue={0}
+                            showTooltip={true}
+                            step={5}
+                          />
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

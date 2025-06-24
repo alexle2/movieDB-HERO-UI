@@ -1,4 +1,5 @@
 import API from "@/API";
+import { initUserData, UserContext } from "@/context";
 import {
   Form,
   Input,
@@ -11,7 +12,7 @@ import {
   ModalFooter,
   useDisclosure,
 } from "@heroui/react";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 type LoginData = {
   password: string;
@@ -19,9 +20,18 @@ type LoginData = {
 };
 
 export const Login = () => {
+  const { isAuth, setUser, setCookie, removeCookie }: any =
+    useContext(UserContext);
   const [submitings, setSubmitings] = useState(false);
   const [error, setError] = useState(false);
-  const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const { isOpen, onOpen, onOpenChange, onClose } = useDisclosure();
+
+  const logOut = () => {
+    setUser(initUserData);
+    removeCookie("userName");
+    removeCookie("sessionId");
+    removeCookie("accountId");
+  };
 
   const onSubmit = async (e: any) => {
     setError(false);
@@ -38,6 +48,17 @@ export const Login = () => {
         password
       );
       const account = await API.getAccountDetails(session_id);
+
+      setUser({
+        sessionId: session_id,
+        userName: account.username,
+        accountId: account.id,
+      });
+      setSubmitings(false);
+      onClose();
+      setCookie("userName", account.username);
+      setCookie("sessionId", session_id);
+      setCookie("accountId", account.id);
     } catch {
       setError(true);
       setSubmitings(false);
@@ -45,10 +66,22 @@ export const Login = () => {
   };
   return (
     <>
-      <Button onPress={onOpen} color="primary" variant="flat">
-        Login
-      </Button>
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="lg"  placement="center">
+      {isAuth && (
+        <Button onPress={logOut} color="primary" variant="flat">
+          Log Out
+        </Button>
+      )}
+      {!isAuth && (
+        <Button onPress={onOpen} color="primary" variant="flat">
+          Login
+        </Button>
+      )}
+      <Modal
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        size="lg"
+        placement="center"
+      >
         <ModalContent>
           {(onClose) => (
             <section className="flex flex-col items-center justify-center gap-4">
