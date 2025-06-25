@@ -40,17 +40,27 @@ export default function Bookmark({ movieId }: BookmarkProp) {
   const [state, setState] = useState(false);
   const { cookies } = useContext(UserContext);
 
-  const changeWatchlist = async () => {
-    const sessionId = cookies.sessionId;
-    const accountId = cookies.accountId;
-    const data = await API.watchlist(sessionId, movieId, accountId, state);
-    if (data.status_code === 1) setState(true);
-    if (data.status_code === 13) setState(false);
-    addToast({
-      title: "Success",
-      description: "",
-      color: "success",
-    });
+  const toggleWatchlist = async () => {
+    try {
+      const sessionId = cookies.sessionId;
+      const accountId = cookies.accountId;
+      const data = await API.watchlist(sessionId, movieId, accountId, state);
+      if (data.status_code === 3) {
+        addToast({
+          title: "Error",
+          description: data?.status_message,
+          color: "danger",
+        });
+        return;
+      }
+      if (data.status_code === 1) setState(true);
+      if (data.status_code === 13) setState(false);
+      addToast({
+        title: "Success",
+        description: "",
+        color: "success",
+      });
+    } catch {}
   };
 
   const getState = async () => {
@@ -71,7 +81,7 @@ export default function Bookmark({ movieId }: BookmarkProp) {
 
   const hundler = () => {
     setState(!state);
-    changeWatchlist();
+    toggleWatchlist();
   };
 
   return (

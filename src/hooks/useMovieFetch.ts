@@ -1,8 +1,12 @@
-import API, { Movie } from "@/API";
+import API, { Cast, Crew, Movie } from "@/API";
 import { useEffect, useState } from "react";
 
+
+
+type MovieData = Movie & { actors: Array<Cast> } & { directors: Array<Crew> }
+
 export const useMovieFetch = (movieId: string = '') => {
-  const [movie, setMovie] = useState<any>();
+  const [movie, setMovie] = useState<MovieData>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 

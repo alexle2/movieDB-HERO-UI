@@ -4,13 +4,11 @@ import { useParams } from "react-router-dom";
 import { IMAGE_BASE_URL, POSTER_SIZE } from "@/config";
 import {
   Alert,
-  Button,
   Card,
   CardBody,
   CardHeader,
   CircularProgress,
   Image,
-  Slider,
 } from "@heroui/react";
 import { useContext } from "react";
 import { UserContext } from "@/context";
@@ -117,7 +115,7 @@ export default function Movie() {
             </CardBody>
           </Card>
           <h2 className="text-4xl font-semibold">Actors</h2>
-          {/* <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
             {movie.actors.map((actor) => {
               return (
                 <Card key={actor.id}>
@@ -137,7 +135,7 @@ export default function Movie() {
                 </Card>
               );
             })}
-          </div> */}
+          </div>
         </section>
       )}
     </DefaultLayout>

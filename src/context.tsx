@@ -29,7 +29,7 @@ const UserProvider = ({ children }: Props) => {
   ]);
 
   // useEffect(() => {
-  //   if (cookies.userName && cookies.sessionId && cookies.accountId) {
+  //   if (!cookies.userName && !cookies.sessionId && !cookies.accountId) {
   //     API.getAccountDetails(cookies.sessionId).then((data) => {
   //       if (
   //         data?.status_code !== 3 &&
@@ -49,8 +49,9 @@ const UserProvider = ({ children }: Props) => {
   //       }
   //     });
   //   }
-  // }, [cookies, removeCookie]);
-  const isAuth = !!cookies.userName;
+  // }, [cookies]);
+
+  const isAuth = !!cookies.userName || !!user.userName;
   const data = {
     isAuth,
     setUser,

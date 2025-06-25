@@ -39,17 +39,29 @@ export default function Favorite({ movieId }: FavoriteProp) {
   const [state, setState] = useState(false);
   const { cookies } = useContext(UserContext);
 
-  const changeFavorite = async () => {
-    const sessionId = cookies.sessionId;
-    const accountId = cookies.accountId;
-    const data = await API.favorite(sessionId, movieId, accountId, state);
-    if (data.status_code === 1) setState(true);
-    if (data.status_code === 13) setState(false);
-    addToast({
-      title: "Success",
-      description: "",
-      color: "success",
-    });
+  const toggleFavorite = async () => {
+    try {
+      const sessionId = cookies.sessionId;
+      const accountId = cookies.accountId;
+      const data = await API.favorite(sessionId, movieId, accountId, state);
+      if (data.status_code === 3) {
+        addToast({
+          title: "Error",
+          description: data?.status_message,
+          color: "danger",
+        });
+        return;
+      }
+      if (data.status_code === 1) setState(true);
+      if (data.status_code === 13) setState(false);
+      addToast({
+        title: "Success",
+        description: "",
+        color: "success",
+      });
+    } catch {
+      console.error('error')
+    }
   };
 
   const getState = async () => {
@@ -70,7 +82,7 @@ export default function Favorite({ movieId }: FavoriteProp) {
 
   const hundler = () => {
     setState(!state);
-    changeFavorite();
+    toggleFavorite();
   };
 
   return (
